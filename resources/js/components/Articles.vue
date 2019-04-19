@@ -117,18 +117,21 @@ export default {
           .then(data => {
             this.clearForm();
             alert('Article Updated');
-            clearForm();
+            
             this.fetchArticles();
+            clearForm();
           })
           .catch(err => console.log(err));
       }
     },
     editArticle(article) {
       this.edit = true;
+
       this.article.id = article.id;
       this.article.article_id = article.id;
       this.article.title = article.title;
       this.article.body = article.body;
+       this.show = true;
     },
     clearForm() {
       this.edit = false;
