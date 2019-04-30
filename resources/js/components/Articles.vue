@@ -1,10 +1,11 @@
 <template>
-  <div>
-    <h2>Articles</h2>
-    <button @click="show = !show" v-if="show === false" class="btn btn-success btn-block my-2">Add Article</button>
+  <div >
+    <h2>Articles </h2>
+    <button @click="show = !show" v-if="show === false " class="btn btn-success btn-block my-2">Add Article</button>
     <form v-if="show" @submit.prevent="addArticle" class="mb-3">
       <div class="form-group">
         <input type="text" class="form-control" placeholder="Title" v-model="article.title">
+
       </div>
       <div class="form-group">
         <textarea class="form-control" placeholder="Body" v-model="article.body"></textarea>
@@ -39,7 +40,8 @@ export default {
       article: {
         id: '',
         title: '',
-        body: ''
+        body: '',
+        user_id: ''
       },
       article_id: '',
       pagination: {},
@@ -49,6 +51,8 @@ export default {
   },
 
   created() {
+    this.article.user_id = this.$gate.idUser();
+    console.log(this.article.user_id);
     this.fetchArticles();
   },
 

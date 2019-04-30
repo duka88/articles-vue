@@ -10,6 +10,7 @@ use App\Http\Requests;
 
 class ArticleController extends Controller
 {
+    
     /**
      * Display a listing of the resource.
      *
@@ -45,6 +46,7 @@ class ArticleController extends Controller
         $article->id = $request->input('article_id');
         $article->title = $request->input('title');
         $article->body = $request->input('body');
+        $article->user_id = $request->input('user_id');
 
         if($article->save()){
             return new ArticleResource($article);
