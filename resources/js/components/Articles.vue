@@ -3,6 +3,7 @@
     <h2>Articles </h2>
     <button @click="Verify()" v-if="show === false " class="btn btn-success btn-block my-2">Add Article</button>
     <form v-if="show" @submit.prevent="addArticle" class="mb-3">
+      <div v-for="error in errors">{{error}}</div>
       <div class="form-group">
         <input type="text" class="form-control" placeholder="Title" v-model="article.title">
 
@@ -23,12 +24,12 @@
       </ul>
     </nav>
     <div class="card card-body mb-2" v-for="article in articles" v-bind:key="article.id">
-      <h3>{{ article.title }}</h3>
+      <h3>{{ article.title }}</h3>{{article.user_id}}{{$gate.isAdmin()}}
       <p>{{ article.body }}</p>
       <hr>
       
-            <button v-if="$gate.idUser() === article.user_id" @click="editArticle(article)" class="btn btn-warning mb-2">Edit</button>
-            <button v-if="$gate.idUser() === article.user_id" @click="deleteArticle(article.id)" class="btn btn-danger">Delete</button>
+            <button v-if="$gate.isAdmin() || $gate.user.id === article.user_id" @click="editArticle(article)" class="btn btn-warning mb-2">Edit</button>
+            <button v-if="$gate.isAdmin() || $gate.user.id === article.user_id" @click="deleteArticle(article.id)" class="btn btn-danger">Delete</button>
       
     </div>
   </div>
@@ -38,6 +39,7 @@
 export default {
   data() {
     return {
+      errors: [],
       articles: [],
       article: {
         id: '',
@@ -53,9 +55,10 @@ export default {
   },
 
   created() {
+    console.log(this.$gate.user.id);
     if(this.$gate.idUser()){
-       this.article.user_id = this.$gate.idUser();
-        console.log(this.user_id);
+       this.article.user_id = this.$gate.user.id;
+      
      }
     this.fetchArticles();
   },
@@ -77,7 +80,7 @@ export default {
           this.articles = res.data;
           vm.makePagination(res.meta, res.links);
         })
-        .catch(err => console.log(err));
+        .catch(errors => console.log(errors));
     },
     makePagination(meta, links) {
       let pagination = {

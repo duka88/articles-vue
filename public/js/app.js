@@ -1799,9 +1799,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      errors: [],
       articles: [],
       article: {
         id: '',
@@ -1816,9 +1818,10 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
+    console.log(this.$gate.user.id);
+
     if (this.$gate.idUser()) {
-      this.article.user_id = this.$gate.idUser();
-      console.log(this.user_id);
+      this.article.user_id = this.$gate.user.id;
     }
 
     this.fetchArticles();
@@ -1841,8 +1844,8 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (res) {
         _this.articles = res.data;
         vm.makePagination(res.meta, res.links);
-      })["catch"](function (err) {
-        return console.log(err);
+      })["catch"](function (errors) {
+        return console.log(errors);
       });
     },
     makePagination: function makePagination(meta, links) {
@@ -37259,6 +37262,10 @@ var render = function() {
               }
             },
             [
+              _vm._l(_vm.errors, function(error) {
+                return _c("div", [_vm._v(_vm._s(error))])
+              }),
+              _vm._v(" "),
               _c("div", { staticClass: "form-group" }, [
                 _c("input", {
                   directives: [
@@ -37315,7 +37322,8 @@ var render = function() {
                 },
                 [_vm._v("Save")]
               )
-            ]
+            ],
+            2
           )
         : _vm._e(),
       _vm._v(" "),
@@ -37405,12 +37413,14 @@ var render = function() {
           { key: article.id, staticClass: "card card-body mb-2" },
           [
             _c("h3", [_vm._v(_vm._s(article.title))]),
-            _vm._v(" "),
+            _vm._v(
+              _vm._s(article.user_id) + _vm._s(_vm.$gate.isAdmin()) + "\n    "
+            ),
             _c("p", [_vm._v(_vm._s(article.body))]),
             _vm._v(" "),
             _c("hr"),
             _vm._v(" "),
-            _vm.$gate.idUser() === article.user_id
+            _vm.$gate.isAdmin() || _vm.$gate.user.id === article.user_id
               ? _c(
                   "button",
                   {
@@ -37425,7 +37435,7 @@ var render = function() {
                 )
               : _vm._e(),
             _vm._v(" "),
-            _vm.$gate.idUser() === article.user_id
+            _vm.$gate.isAdmin() || _vm.$gate.user.id === article.user_id
               ? _c(
                   "button",
                   {
@@ -49663,12 +49673,12 @@ function () {
   }, {
     key: "isAdmin",
     value: function isAdmin() {
-      return this.user.type === 'admin';
+      return this.user.role === 'admin';
     }
   }, {
     key: "isUser",
     value: function isUser() {
-      return this.user.type === 'user';
+      return this.user.role === 'user';
     }
   }, {
     key: "idUser",
@@ -49729,6 +49739,9 @@ Vue.prototype.$gate = new _Gate__WEBPACK_IMPORTED_MODULE_0__["default"](window.u
 
 Vue.component('articles', __webpack_require__(/*! ./components/Articles.vue */ "./resources/js/components/Articles.vue")["default"]);
 Vue.component('navbar', __webpack_require__(/*! ./components/Navbar.vue */ "./resources/js/components/Navbar.vue")["default"]);
+axios.get('/api/user').then(function (response) {
+  console.log(Vue.prototype.$gate);
+});
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -49939,8 +49952,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\wamp64\www\articles\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\wamp64\www\articles\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\wamp64\www\articles-vue\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\wamp64\www\articles-vue\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

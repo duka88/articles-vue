@@ -24,6 +24,10 @@ Vue.prototype.$gate = new Gate(window.user);
 
 Vue.component('articles', require('./components/Articles.vue').default);
 Vue.component('navbar', require('./components/Navbar.vue').default);
+axios.get('/api/user').then(response => {
+  
+   console.log(Vue.prototype.$gate);
+});
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -11,8 +11,7 @@ use App\Http\Requests;
 
 class ArticleController extends Controller
 {
-    
-  
+   
     /**
      * Display a listing of the resource.
      *

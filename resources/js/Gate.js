@@ -9,11 +9,11 @@ export default class Gate{
     }
 
     isAdmin(){
-        return this.user.type === 'admin';
+        return this.user.role === 'admin';
     }
 
     isUser(){
-        return this.user.type === 'user';
+        return this.user.role === 'user';
     }
 
 	idUser(){
