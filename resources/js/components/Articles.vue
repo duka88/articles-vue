@@ -1,7 +1,7 @@
 <template>
   <div >
     <h2>Articles </h2>
-    <button @click="show = !show" v-if="show === false " class="btn btn-success btn-block my-2">Add Article</button>
+    <button @click="Verify()" v-if="show === false " class="btn btn-success btn-block my-2">Add Article</button>
     <form v-if="show" @submit.prevent="addArticle" class="mb-3">
       <div class="form-group">
         <input type="text" class="form-control" placeholder="Title" v-model="article.title">
@@ -26,8 +26,10 @@
       <h3>{{ article.title }}</h3>
       <p>{{ article.body }}</p>
       <hr>
-      <button @click="editArticle(article)" class="btn btn-warning mb-2">Edit</button>
-      <button @click="deleteArticle(article.id)" class="btn btn-danger">Delete</button>
+      
+            <button v-if="$gate.idUser() === article.user_id" @click="editArticle(article)" class="btn btn-warning mb-2">Edit</button>
+            <button v-if="$gate.idUser() === article.user_id" @click="deleteArticle(article.id)" class="btn btn-danger">Delete</button>
+      
     </div>
   </div>
 </template>
@@ -51,12 +53,21 @@ export default {
   },
 
   created() {
-    this.article.user_id = this.$gate.idUser();
-    console.log(this.article.user_id);
+    if(this.$gate.idUser()){
+       this.article.user_id = this.$gate.idUser();
+        console.log(this.user_id);
+     }
     this.fetchArticles();
   },
 
   methods: {
+    Verify(){
+      if(this.$gate.isVerify()){
+        this.show = true;
+      }else{
+        alert('Must verify email to get access');
+      }
+    },
     fetchArticles(page_url) {
       let vm = this;
       page_url = page_url || '/api/articles';

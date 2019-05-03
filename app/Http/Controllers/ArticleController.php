@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\ArticleRequest;
 use App\article;
 use App\Http\Resources\Article as ArticleResource;
 use App\Http\Requests;
@@ -11,6 +12,7 @@ use App\Http\Requests;
 class ArticleController extends Controller
 {
     
+  
     /**
      * Display a listing of the resource.
      *
@@ -18,9 +20,12 @@ class ArticleController extends Controller
      */
     public function index()
     {
+     
+      
        $articles = Article::orderBy('created_at','desc')->paginate(5);
 
        return ArticleResource::collection($articles);
+  
     }
 
     /**
@@ -39,8 +44,9 @@ class ArticleController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ArticleRequest $request)
     {
+
         $article = $request->isMethod('put') ? Article::findOrFail($request->article_id) : new Article;
 
         $article->id = $request->input('article_id');

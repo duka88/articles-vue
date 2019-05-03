@@ -17,6 +17,17 @@ export default class Gate{
     }
 
 	idUser(){
-		return this.user.id;
+        if(this.user){
+		  return this.user.id;
+         }else{
+            return false;
+         } 
 	}
+    isVerify(){
+      if(this.user){  
+        return this.user.email_verified_at;
+      }else{
+            return false;
+         }   
+    }
 }

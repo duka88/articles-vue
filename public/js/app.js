@@ -1797,6 +1797,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1814,11 +1816,21 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
-    this.article.user_id = this.$gate.idUser();
-    console.log(this.article.user_id);
+    if (this.$gate.idUser()) {
+      this.article.user_id = this.$gate.idUser();
+      console.log(this.user_id);
+    }
+
     this.fetchArticles();
   },
   methods: {
+    Verify: function Verify() {
+      if (this.$gate.isVerify()) {
+        this.show = true;
+      } else {
+        alert('Must verify email to get access');
+      }
+    },
     fetchArticles: function fetchArticles(page_url) {
       var _this = this;
 
@@ -37226,7 +37238,7 @@ var render = function() {
               staticClass: "btn btn-success btn-block my-2",
               on: {
                 click: function($event) {
-                  _vm.show = !_vm.show
+                  return _vm.Verify()
                 }
               }
             },
@@ -37398,31 +37410,35 @@ var render = function() {
             _vm._v(" "),
             _c("hr"),
             _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-warning mb-2",
-                on: {
-                  click: function($event) {
-                    return _vm.editArticle(article)
-                  }
-                }
-              },
-              [_vm._v("Edit")]
-            ),
+            _vm.$gate.idUser() === article.user_id
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-warning mb-2",
+                    on: {
+                      click: function($event) {
+                        return _vm.editArticle(article)
+                      }
+                    }
+                  },
+                  [_vm._v("Edit")]
+                )
+              : _vm._e(),
             _vm._v(" "),
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-danger",
-                on: {
-                  click: function($event) {
-                    return _vm.deleteArticle(article.id)
-                  }
-                }
-              },
-              [_vm._v("Delete")]
-            )
+            _vm.$gate.idUser() === article.user_id
+              ? _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-danger",
+                    on: {
+                      click: function($event) {
+                        return _vm.deleteArticle(article.id)
+                      }
+                    }
+                  },
+                  [_vm._v("Delete")]
+                )
+              : _vm._e()
           ]
         )
       })
@@ -49657,7 +49673,20 @@ function () {
   }, {
     key: "idUser",
     value: function idUser() {
-      return this.user.id;
+      if (this.user) {
+        return this.user.id;
+      } else {
+        return false;
+      }
+    }
+  }, {
+    key: "isVerify",
+    value: function isVerify() {
+      if (this.user) {
+        return this.user.email_verified_at;
+      } else {
+        return false;
+      }
     }
   }]);
 
@@ -49910,8 +49939,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\wamp64\www\articles-vue\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\wamp64\www\articles-vue\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\wamp64\www\articles\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\wamp64\www\articles\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
