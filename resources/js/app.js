@@ -9,8 +9,7 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
-import Gate from './Gate';
-Vue.prototype.$gate = new Gate(window.user); 
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -23,11 +22,8 @@ Vue.prototype.$gate = new Gate(window.user);
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default));
 
 Vue.component('articles', require('./components/Articles.vue').default);
-Vue.component('navbar', require('./components/Navbar.vue').default);
-axios.get('/api/user').then(response => {
-  
-   console.log(Vue.prototype.$gate);
-});
+
+
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -36,5 +32,6 @@ axios.get('/api/user').then(response => {
  */
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+   
 });

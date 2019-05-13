@@ -2,9 +2,8 @@
 
 @section('content')
 
-        <div id="app">
-            <navbar></navbar> 
-           <div class="container"> 
+        <div id="app">	    
+          <div class="container"> 
             <articles></articles>  
          </div>      
         </div>
