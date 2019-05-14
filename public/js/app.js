@@ -1867,6 +1867,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1884,6 +1886,10 @@ __webpack_require__.r(__webpack_exports__);
         username: '',
         password: ''
       },
+      authUser: {
+        id: '',
+        role: ''
+      },
       article_id: '',
       pagination: {},
       edit: false,
@@ -1895,6 +1901,7 @@ __webpack_require__.r(__webpack_exports__);
   created: function created() {
     console.log(this.auth());
     console.log(this.user.token);
+    this.getAuth();
     this.auth();
     this.fetchArticles();
   },
@@ -1906,15 +1913,27 @@ __webpack_require__.r(__webpack_exports__);
         return false;
       }
     },
-    fetchArticles: function fetchArticles(page_url) {
+    getAuth: function getAuth() {
       var _this = this;
+
+      axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.user.token;
+      axios.get('/api/user').then(function (response) {
+        _this.authUser.id = response.data.id;
+        _this.authUser.role = response.data.role;
+        _this.article.user_id = response.data.id;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
+    fetchArticles: function fetchArticles(page_url) {
+      var _this2 = this;
 
       var vm = this;
       page_url = page_url || '/api/articles';
       fetch(page_url).then(function (res) {
         return res.json();
       }).then(function (res) {
-        _this.articles = res.data;
+        _this2.articles = res.data;
         vm.makePagination(res.meta, res.links);
       })["catch"](function (errors) {
         return console.log(errors);
@@ -1930,7 +1949,7 @@ __webpack_require__.r(__webpack_exports__);
       this.pagination = pagination;
     },
     deleteArticle: function deleteArticle(id) {
-      var _this2 = this;
+      var _this3 = this;
 
       if (confirm('Are You Sure?')) {
         fetch("api/article/".concat(id), {
@@ -1940,14 +1959,14 @@ __webpack_require__.r(__webpack_exports__);
         }).then(function (data) {
           alert('Article Removed');
 
-          _this2.fetchArticles();
+          _this3.fetchArticles();
         })["catch"](function (err) {
           return console.log(err);
         });
       }
     },
     addArticle: function addArticle() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this.edit === false) {
         // Add
@@ -1960,11 +1979,11 @@ __webpack_require__.r(__webpack_exports__);
         }).then(function (res) {
           return res.json();
         }).then(function (data) {
-          _this3.clearForm();
+          _this4.clearForm();
 
           alert('Article Added');
 
-          _this3.fetchArticles();
+          _this4.fetchArticles();
         })["catch"](function (err) {
           return console.log(err);
         });
@@ -1979,11 +1998,11 @@ __webpack_require__.r(__webpack_exports__);
         }).then(function (res) {
           return res.json();
         }).then(function (data) {
-          _this3.clearForm();
+          _this4.clearForm();
 
           alert('Article Updated');
 
-          _this3.fetchArticles();
+          _this4.fetchArticles();
 
           clearForm();
         })["catch"](function (err) {
@@ -2008,7 +2027,7 @@ __webpack_require__.r(__webpack_exports__);
       this.show = false;
     },
     login: function login() {
-      var _this4 = this;
+      var _this5 = this;
 
       axios.post('/api/login', {
         username: this.user.username,
@@ -2016,21 +2035,21 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (response) {
         var token = response.data.access_token;
         localStorage.setItem('access_token', token);
-        _this4.loginForm = false;
+        _this5.loginForm = false;
       })["catch"](function (error) {
         console.log(error);
       });
     },
     register: function register() {
-      var _this5 = this;
+      var _this6 = this;
 
       axios.post('/api/register', {
         name: this.user.name,
         email: this.user.email,
         password: this.user.password
       }).then(function (response) {
-        _this5.registerForm = false;
-        _this5.loginForm = true;
+        _this6.registerForm = false;
+        _this6.loginForm = true;
       })["catch"](function (error) {
         console.log(error);
       });
@@ -37829,31 +37848,37 @@ var render = function() {
               _vm._v(" "),
               _c("hr"),
               _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-warning mb-2",
-                  on: {
-                    click: function($event) {
-                      return _vm.editArticle(article)
-                    }
-                  }
-                },
-                [_vm._v("Edit")]
-              ),
+              _vm.authUser.role === "admin" ||
+              _vm.authUser.id == article.user_id
+                ? _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-warning mb-2",
+                      on: {
+                        click: function($event) {
+                          return _vm.editArticle(article)
+                        }
+                      }
+                    },
+                    [_vm._v("Edit")]
+                  )
+                : _vm._e(),
               _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-danger",
-                  on: {
-                    click: function($event) {
-                      return _vm.deleteArticle(article.id)
-                    }
-                  }
-                },
-                [_vm._v("Delete")]
-              )
+              _vm.authUser.role === "admin" ||
+              _vm.authUser.id == article.user_id
+                ? _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-danger",
+                      on: {
+                        click: function($event) {
+                          return _vm.deleteArticle(article.id)
+                        }
+                      }
+                    },
+                    [_vm._v("Delete")]
+                  )
+                : _vm._e()
             ]
           )
         })

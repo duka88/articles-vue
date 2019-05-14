@@ -94,8 +94,10 @@
         <p>{{ article.body }}</p>
         <hr>
         
-              <button  @click="editArticle(article)" class="btn btn-warning mb-2">Edit</button>
-              <button  @click="deleteArticle(article.id)" class="btn btn-danger">Delete</button>
+              <button v-if="authUser.role === 'admin' || authUser.id ==article.user_id" 
+              @click="editArticle(article)" class="btn btn-warning mb-2">Edit</button>
+              <button v-if="authUser.role === 'admin' || authUser.id ==article.user_id"
+               @click="deleteArticle(article.id)" class="btn btn-danger">Delete</button>
         
       </div>
      </div> 
@@ -120,6 +122,10 @@ export default {
         username: '',
         password: '',
       },
+      authUser:{
+        id: '',
+        role: ''
+      },
       article_id: '',
       pagination: {},
       edit: false,
@@ -133,18 +139,33 @@ export default {
   created() {
     console.log(this.auth());
     console.log(this.user.token);
-
+    this.getAuth();
     this.auth();
     this.fetchArticles();    
   },
 
   methods: {
+
     auth(){
       if(this.user.token){
         return  true;
       }else{
         return false;
       }
+    },
+    getAuth(){
+       axios.defaults.headers.common['Authorization'] = 'Bearer ' + this.user.token;
+
+
+       axios.get('/api/user')
+       .then(response => {            
+        this.authUser.id = response.data.id;
+        this.authUser.role = response.data.role;
+        this.article.user_id = response.data.id;
+      })
+      .catch(error => {
+        console.log(error)
+      })
     },
     fetchArticles(page_url) {
       let vm = this;

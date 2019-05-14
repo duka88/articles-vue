@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
+
 class Article extends JsonResource
 {
     /**
@@ -20,7 +21,7 @@ class Article extends JsonResource
           'title' => $this->title,
           'body' => $this->body,
           'user_id' => $this->user_id,
-          //'user' => $this->user
+          
         ];
     }
 

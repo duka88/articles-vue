@@ -7,6 +7,7 @@ use App\Http\Requests\ArticleRequest;
 use App\article;
 use App\Http\Resources\Article as ArticleResource;
 use App\Http\Requests;
+use App\User;
 
 
 class ArticleController extends Controller
